@@ -10,9 +10,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{E393E29D-8
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		ci-build.ps1 = ci-build.ps1
 		directory.build.props = directory.build.props
+		global.json = global.json
 		LICENSE = LICENSE
 		README.md = README.md
+		.github\workflows\ci.yaml = .github\workflows\ci.yaml
 	EndProjectSection
 EndProject
 Global
