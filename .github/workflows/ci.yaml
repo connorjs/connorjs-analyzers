@@ -32,11 +32,6 @@ jobs:
         run: dotnet pack -c release --no-build
       # End ci-build.ps1
 
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4.0.1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
