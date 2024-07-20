@@ -21,7 +21,7 @@ jobs:
         with:
           global-json-file: global.json
 
-      - run: ls
+      - run: pwd
 
       # Begin ci-build.ps1
       - name: dotnet restore
