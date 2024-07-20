@@ -21,6 +21,8 @@ jobs:
         with:
           global-json-file: global.json
 
+      - run: ls
+
       # Begin ci-build.ps1
       - name: dotnet restore
         run: dotnet restore
@@ -31,6 +33,8 @@ jobs:
       - name: dotnet pack
         run: dotnet pack -c release --no-build
       # End ci-build.ps1
+
+      - run: ls -R artifacts
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
