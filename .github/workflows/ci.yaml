@@ -22,14 +22,14 @@ jobs:
           global-json-file: global.json
 
       # Begin ci-build.ps1
-      - name: dotnet restore *.sln
+      - name: dotnet restore
         run: dotnet restore *.sln
 
-      - name: dotnet build *.sln
-        run: dotnet build -c release --no-restore
+      - name: dotnet build
+        run: dotnet build -c release --no-restore *.sln
 
-      - name: dotnet pack *.sln
-        run: dotnet pack -c release --no-build
+      - name: dotnet pack
+        run: dotnet pack -c release --no-build *.sln
       # End ci-build.ps1
 
       - run: ls -R artifacts
