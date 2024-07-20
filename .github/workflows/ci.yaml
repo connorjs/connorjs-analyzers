@@ -32,8 +32,6 @@ jobs:
         run: dotnet pack -c release --no-build
       # End ci-build.ps1
 
-      - run: ls -R artifacts
-
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
