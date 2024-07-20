@@ -42,7 +42,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         run: >-
           dotnet nuget push
-          /artifacts/package/release/*.nupkg
+          artifacts/package/release/*.nupkg
           --api-key $NUGET_AUTH_TOKEN
           --no-symbols
           --skip-duplicate
