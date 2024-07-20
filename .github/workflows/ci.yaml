@@ -23,13 +23,13 @@ jobs:
 
       # Begin ci-build.ps1
       - name: dotnet restore
-        run: dotnet restore *.sln
+        run: dotnet restore
 
       - name: dotnet build
-        run: dotnet build -c release --no-restore *.sln
+        run: dotnet build -c release --no-restore
 
       - name: dotnet pack
-        run: dotnet pack -c release --no-build *.sln
+        run: dotnet pack -c release --no-build
       # End ci-build.ps1
 
       - run: ls -R artifacts
