@@ -21,16 +21,14 @@ jobs:
         with:
           global-json-file: global.json
 
-      - run: pwd
-
       # Begin ci-build.ps1
-      - name: dotnet restore
-        run: dotnet restore
+      - name: dotnet restore *.sln
+        run: dotnet restore *.sln
 
-      - name: dotnet build
+      - name: dotnet build *.sln
         run: dotnet build -c release --no-restore
 
-      - name: dotnet pack
+      - name: dotnet pack *.sln
         run: dotnet pack -c release --no-build
       # End ci-build.ps1
 
