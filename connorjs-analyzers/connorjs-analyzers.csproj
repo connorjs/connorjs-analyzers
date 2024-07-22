@@ -1,15 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<RootNamespace>ConnorJS.Analyzers</RootNamespace>
 		<EnablePackageValidation>true</EnablePackageValidation>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<PackageId>connorjs-analyzers</PackageId>
-		<PackageVersion>0.1.0</PackageVersion>
+		<PackageVersion>0.0.0-gitversion</PackageVersion>
 		<Authors>Connor Sullivan</Authors>
 		<Description>@connorjs’s personal .NET analyzer package</Description>
+		<DevelopmentDependency>true</DevelopmentDependency>
 		<PackageProjectUrl>https://github.com/connorjs/connorjs-analyzers#readme</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageTags>analyzers csharp csharpier lint sonar stylecop</PackageTags>
@@ -22,6 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="GitVersion.MsBuild" Version="6.0.0" PrivateAssets="all" />
 		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.28.0.94264" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
 	</ItemGroup>
