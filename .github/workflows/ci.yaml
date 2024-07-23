@@ -10,6 +10,8 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    outputs:
+      GitVersion_SemVer: ${{ steps.GitVersion.outputs.GitVersion_SemVer }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,6 +24,7 @@ jobs:
           versionSpec: 6.x
 
       - name: Execute GitVersion
+        id: GitVersion
         uses: gittools/actions/gitversion/execute@v2.0.1
         with:
           useConfigFile: true
@@ -59,10 +62,12 @@ jobs:
           compression-level: 0 # NuGet pack already compresses so do not re-compress? (Not confirmed)
 
   publish:
-    if: ${{ github.ref == 'refs/heads/main' }}
+    # if: ${{ github.ref == 'refs/heads/main' }}
     name: Publish
     needs: Build
     runs-on: ubuntu-latest
+    env:
+      GitVersion_SemVer: ${{needs.build.outputs.GitVersion_SemVer}}
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -78,6 +83,7 @@ jobs:
           echo 'NUPKG_PATH=${{ github.event.repository.name }}.${{ env.GitVersion_SemVer }}.nupkg' >> "$GITHUB_ENV"
 
       - name: Publish to NuGet
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: >-
           dotnet nuget push ${{ env.NUPKG_PATH }}
           --api-key $NUGET_AUTH_TOKEN
@@ -99,6 +105,7 @@ jobs:
             ${{ env.NUPKG_PATH }}
 
       - uses: gittools/actions/gitreleasemanager/publish@v2.0.1
+        if: ${{ github.ref == 'refs/heads/main' }}
         name: Publish release with GitReleaseManager
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
