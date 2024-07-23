@@ -32,7 +32,7 @@ jobs:
 
       - name: Set nupkg path (GitVersion-ed)
         run: |
-          echo 'NUPKG_PATH=artifacts/package/release/${{ REPO_NAME }}.${{ env.GitVersion_SemVer }}.nupkg' >> "$GITHUB_ENV"
+          echo 'NUPKG_PATH=artifacts/package/release/${{ env.REPO_NAME }}.${{ env.GitVersion_SemVer }}.nupkg' >> "$GITHUB_ENV"
 
       - name: Use .NET
         uses: actions/setup-dotnet@v4
@@ -71,8 +71,8 @@ jobs:
         name: Create release (GitReleaseManager)
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          owner: ${{ GITHUB_REPOSITORY_OWNER }}
-          repository: ${{ REPO_NAME }}
+          owner: ${{ env.GITHUB_REPOSITORY_OWNER }}
+          repository: ${{ env.REPO_NAME }}
           milestone: ${{ env.GitVersion_SemVer }}
           name: v${{ env.GitVersion_SemVer }}
           assets: |
