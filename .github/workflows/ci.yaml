@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   build:
@@ -26,10 +26,6 @@ jobs:
         with:
           useConfigFile: true
           additionalArguments: /updateprojectfiles
-
-      - name: Set nupkg path (GitVersion-ed)
-        run: |
-          echo 'NUPKG_PATH=artifacts/package/release/${{ github.event.repository.name }}.${{ env.GitVersion_SemVer }}.nupkg' >> "$GITHUB_ENV"
 
       - name: Use .NET
         uses: actions/setup-dotnet@v4
@@ -53,19 +49,52 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+      - uses: actions/upload-artifact@v4
+        if: ${{ github.ref == 'refs/heads/main' }}
+        id: nupkg-upload-step
+        with:
+          name: nupkg
+          path: artifacts/package/release/${{ github.event.repository.name }}.${{ env.GitVersion_SemVer }}.nupkg
+          if-no-files-found: error
+          retention-days: 1 # Minimal retention b/c only needed for job passing; release manager uploads the same artifact
+          compression-level: 0 # NuGet pack already compresses so do not re-compress? (Not confirmed)
+
+  publish:
+    name: Publish
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: nupkg
+          path: nupkg
+
+      - name: Set up GitReleaseManager
+        uses: gittools/actions/gitreleasemanager/setup@v2.0.1
+        with:
+          versionSpec: '0.18.x'
+
+      - name: Set nupkg path (GitVersion-ed)
+        run: |
+          echo 'NUPKG_PATH=nupkg/${{ github.event.repository.name }}.${{ env.GitVersion_SemVer }}.nupkg' >> "$GITHUB_ENV"
+
+      - name: TESTING
+        run: ls -R nupkg
+
       - name: dotnet nuget push
         if: ${{ github.ref == 'refs/heads/main' }}
         run: >-
           dotnet nuget push ${{ env.NUPKG_PATH }}
           --api-key $NUGET_AUTH_TOKEN
           --no-symbols
+          --skip-duplicate
           --source https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}
 
       - uses: gittools/actions/gitreleasemanager/create@v2.0.1
         if: ${{ github.ref == 'refs/heads/main' }}
-        name: Create release (GitReleaseManager)
+        name: Create release with GitReleaseManager
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           owner: ${{ github.repository_owner }}
@@ -74,3 +103,12 @@ jobs:
           name: v${{ env.GitVersion_SemVer }}
           assets: |
             ${{ env.NUPKG_PATH }}
+
+      - uses: gittools/actions/gitreleasemanager/publish@v2.0.1
+        if: ${{ github.ref == 'refs/heads/main' }}
+        name: Publish release with GitReleaseManager
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          owner: ${{ github.repository_owner }}
+          repository: ${{ github.event.repository.name }}
+          milestone: ${{ env.GitVersion_SemVer }}
