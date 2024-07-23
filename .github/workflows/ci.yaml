@@ -14,7 +14,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Full depth (not shallow) for better relevancy of Sonar analysis
+          fetch-depth: 0 # Full depth (not shallow) for GitVersion and better relevancy of Sonar analysis
+
+      - name: Set up GitVersion
+        uses: gittools/actions/gitversion/setup@v2.0.1
+        with:
+          versionSpec: 6.x
+
+      - name: Execute GitVersion
+        uses: gittools/actions/gitversion/execute@v2.0.1
+        with:
+          useConfigFile: true
+          updateAssemblyInfo: true
 
       - name: Use .NET
         uses: actions/setup-dotnet@v4
@@ -49,3 +60,14 @@ jobs:
           --source https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}
+
+      - name: TEST
+        run: |
+          git tag v${{ env.SemVer }}
+          echo v${{ env.SemVer }}
+
+      - name: git tag
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          git tag v${{ env.SemVer }}
+          git push origin tag v${{ env.SemVer }}
