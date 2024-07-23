@@ -52,6 +52,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+      - name: git tag
+        run: |
+          git tag v${{ env.GitVersion_SemVer }}
+          git push origin tag v${{ env.GitVersion_SemVer }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: actions/upload-artifact@v4
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
@@ -73,11 +80,6 @@ jobs:
         with:
           name: nupkg
 
-      - name: Set up GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/setup@v2.0.1
-        with:
-          versionSpec: '0.18.x'
-
       - name: Set nupkg path (GitVersion-ed)
         run: |
           echo 'NUPKG_PATH=${{ github.event.repository.name }}.${{ env.GitVersion_SemVer }}.nupkg' >> "$GITHUB_ENV"
@@ -92,21 +94,5 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}
 
-      - uses: gittools/actions/gitreleasemanager/create@v2.0.1
-        name: Create release with GitReleaseManager
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          owner: ${{ github.repository_owner }}
-          repository: ${{ github.event.repository.name }}
-          milestone: ${{ env.GitVersion_SemVer }}
-          name: v${{ env.GitVersion_SemVer }}
-          assets: |
-            ${{ env.NUPKG_PATH }}
-
-      - uses: gittools/actions/gitreleasemanager/publish@v2.0.1
-        name: Publish release with GitReleaseManager
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          owner: ${{ github.repository_owner }}
-          repository: ${{ github.event.repository.name }}
-          milestone: ${{ env.GitVersion_SemVer }}
+      - name: Checkout
+        uses: actions/checkout@v4
