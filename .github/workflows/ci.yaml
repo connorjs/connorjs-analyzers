@@ -63,11 +63,11 @@ jobs:
 
       - name: TEST
         run: |
-          git tag v${{ env.SemVer }}
-          echo v${{ env.SemVer }}
+          git tag v${{ env.GitVersion_SemVer }}
+          echo v${{ env.GitVersion_SemVer }}
 
       - name: git tag
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
-          git tag v${{ env.SemVer }}
-          git push origin tag v${{ env.SemVer }}
+          git tag v${{ env.GitVersion_SemVer }}
+          git push origin tag v${{ env.GitVersion_SemVer }}
