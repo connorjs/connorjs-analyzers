@@ -68,15 +68,15 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GitVersion_SemVer: ${{needs.Build.outputs.GitVersion_SemVer}}
+    permissions:
+      contents: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - uses: actions/download-artifact@v4
         with:
           name: nupkg
-
-      - name: Set up GitReleaseManager
-        uses: gittools/actions/gitreleasemanager/setup@v2.0.1
-        with:
-          versionSpec: '0.18.x'
 
       - name: Set nupkg path (GitVersion-ed)
         run: |
@@ -92,21 +92,7 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}
 
-      - uses: gittools/actions/gitreleasemanager/create@v2.0.1
-        name: Create release with GitReleaseManager
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          owner: ${{ github.repository_owner }}
-          repository: ${{ github.event.repository.name }}
-          milestone: ${{ env.GitVersion_SemVer }}
-          name: v${{ env.GitVersion_SemVer }}
-          assets: |
-            ${{ env.NUPKG_PATH }}
-
-      - uses: gittools/actions/gitreleasemanager/publish@v2.0.1
-        name: Publish release with GitReleaseManager
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          owner: ${{ github.repository_owner }}
-          repository: ${{ github.event.repository.name }}
-          milestone: ${{ env.GitVersion_SemVer }}
+      - name: git tag
+        run: |
+          git tag v${{ env.GitVersion_SemVer }}
+          git push origin tag v${{ env.GitVersion_SemVer }}
