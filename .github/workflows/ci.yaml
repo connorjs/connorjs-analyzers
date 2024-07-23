@@ -51,6 +51,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         id: nupkg-upload-step
+        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           name: nupkg
           path: artifacts/package/release/${{ github.event.repository.name }}.${{ env.GitVersion_SemVer }}.nupkg
@@ -60,13 +61,13 @@ jobs:
 
   publish:
     name: Publish
+    if: ${{ github.ref == 'refs/heads/main' }}
     needs: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
           name: nupkg
-          path: nupkg
 
       - name: Set up GitReleaseManager
         uses: gittools/actions/gitreleasemanager/setup@v2.0.1
@@ -75,13 +76,9 @@ jobs:
 
       - name: Set nupkg path (GitVersion-ed)
         run: |
-          echo 'NUPKG_PATH=nupkg/${{ github.event.repository.name }}.${{ env.GitVersion_SemVer }}.nupkg' >> "$GITHUB_ENV"
+          echo 'NUPKG_PATH=${{ github.event.repository.name }}.${{ env.GitVersion_SemVer }}.nupkg' >> "$GITHUB_ENV"
 
-      - name: TESTING
-        run: ls -R nupkg
-
-      - name: dotnet nuget push
-        if: ${{ github.ref == 'refs/heads/main' }}
+      - name: Publish to NuGet
         run: >-
           dotnet nuget push ${{ env.NUPKG_PATH }}
           --api-key $NUGET_AUTH_TOKEN
@@ -92,7 +89,6 @@ jobs:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}
 
       - uses: gittools/actions/gitreleasemanager/create@v2.0.1
-        if: ${{ github.ref == 'refs/heads/main' }}
         name: Create release with GitReleaseManager
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -104,7 +100,6 @@ jobs:
             ${{ env.NUPKG_PATH }}
 
       - uses: gittools/actions/gitreleasemanager/publish@v2.0.1
-        if: ${{ github.ref == 'refs/heads/main' }}
         name: Publish release with GitReleaseManager
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
