@@ -25,8 +25,7 @@ jobs:
         uses: gittools/actions/gitversion/execute@v2.0.1
         with:
           useConfigFile: true
-          additionalArguments: >-
-            -updateprojectfiles
+          additionalArguments: /updateprojectfiles
 
       - name: Use .NET
         uses: actions/setup-dotnet@v4
