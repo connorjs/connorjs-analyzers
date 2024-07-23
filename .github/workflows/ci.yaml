@@ -25,7 +25,8 @@ jobs:
         uses: gittools/actions/gitversion/execute@v2.0.1
         with:
           useConfigFile: true
-          updateAssemblyInfo: true
+          additionalArguments: >-
+            -updateprojectfiles
 
       - name: Use .NET
         uses: actions/setup-dotnet@v4
@@ -60,11 +61,6 @@ jobs:
           --source https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}
-
-      - name: TEST
-        run: |
-          git tag v${{ env.GitVersion_SemVer }}
-          echo v${{ env.GitVersion_SemVer }}
 
       - name: git tag
         if: ${{ github.ref == 'refs/heads/main' }}
