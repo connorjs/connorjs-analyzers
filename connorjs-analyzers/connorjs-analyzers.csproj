@@ -7,7 +7,6 @@
 
 	<PropertyGroup>
 		<PackageId>connorjs-analyzers</PackageId>
-		<PackageVersion>0.0.0-gitversion</PackageVersion>
 		<Authors>Connor Sullivan</Authors>
 		<Description>@connorjs’s personal .NET analyzer package</Description>
 		<DevelopmentDependency>true</DevelopmentDependency>
