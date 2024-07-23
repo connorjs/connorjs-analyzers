@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  Build:
     name: Build
     runs-on: ubuntu-latest
     outputs:
@@ -53,7 +53,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - uses: actions/upload-artifact@v4
-        if: ${{ github.ref == 'refs/heads/main' }}
+        # if: ${{ github.ref == 'refs/heads/main' }}
         with:
           name: nupkg
           path: artifacts/package/release/${{ github.event.repository.name }}.${{ env.GitVersion_SemVer }}.nupkg
@@ -61,13 +61,13 @@ jobs:
           retention-days: 1 # Minimal retention b/c only needed for job passing; release manager uploads the same artifact
           compression-level: 0 # NuGet pack already compresses so do not re-compress? (Not confirmed)
 
-  publish:
+  Publish:
     # if: ${{ github.ref == 'refs/heads/main' }}
     name: Publish
     needs: Build
     runs-on: ubuntu-latest
     env:
-      GitVersion_SemVer: ${{needs.build.outputs.GitVersion_SemVer}}
+      GitVersion_SemVer: ${{needs.Build.outputs.GitVersion_SemVer}}
     steps:
       - uses: actions/download-artifact@v4
         with:
