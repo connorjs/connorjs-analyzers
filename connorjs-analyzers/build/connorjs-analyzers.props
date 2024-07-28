@@ -1,6 +1,7 @@
 <Project>
 	<ItemGroup>
 		<GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)connorjs-analyzers.globalconfig" />
+		<AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
 	</ItemGroup>
 
 	<!-- MSBuild properties (for .NET) -->
