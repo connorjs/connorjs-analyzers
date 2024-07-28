@@ -4,19 +4,31 @@
 		<AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
 	</ItemGroup>
 
-	<!-- MSBuild properties (for .NET) -->
-	<!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props -->
 	<PropertyGroup>
+		<!-- MSBuild properties (for .NET) -->
+		<!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props -->
+
+		<!-- Build related -->
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+
 		<!-- Code analysis -->
 		<AnalysisMode>Recommended</AnalysisMode>
 		<CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers> <!-- Defaults to true in .NET 5+ -->
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-	</PropertyGroup>
 
-	<!-- C# compiler options -->
-	<!-- https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/ -->
-	<PropertyGroup>
+		<!-- Reference -->
+		<DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences> <!-- Prefer explicit dependencies -->
+
+		<!-- Code generation -->
+		<ImplicitUsings>disable</ImplicitUsings> <!-- Prefer explicit usings -->
+
+		<!-- C# compiler options -->
+		<!-- https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/ -->
+
+		<!-- Language -->
+		<Nullable>enable</Nullable>
+
 		<!-- Errors and warnings -->
 		<!--
 		1. Default all warns to errors (`TreatWarningsAsErrors`).
@@ -29,5 +41,19 @@
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<WarningsNotAsErrors />
 		<NoWarn />
+
+		<!-- Code generation -->
+		<Deterministic>true</Deterministic>
+	</PropertyGroup>
+
+	<!-- Overrides for test projects -->
+	<PropertyGroup Condition="$(IsTestProject)">
+		<!-- Test projects do not generate documentation -->
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
+
+		<!-- Disable these for test projects
+		- SA0001, SA1600: Documentation-related
+		-->
+		<NoWarn>SA0001,SA1600,$(NoWarn)</NoWarn>
 	</PropertyGroup>
 </Project>
