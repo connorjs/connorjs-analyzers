@@ -71,10 +71,6 @@ dotnet_diagnostic.SA1518.severity = none
 
 # StyleCop - https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/DOCUMENTATION.md
 
-## Special rules - https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SpecialRules.md
-; Not all projects need to generate XML Documentation. Trust projects to enable `GenerateDocumentationFile` if needed.
-dotnet_diagnostic.SA0001.severity = none
-
 ## Documentation - https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/DocumentationRules.md
-; Do not need file header.
+; Do not need file header (repository licenses should suffice)
 dotnet_diagnostic.SA1633.severity = none
