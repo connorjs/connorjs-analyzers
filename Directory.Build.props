@@ -1,9 +1,3 @@
 <Project>
-	<PropertyGroup Condition="'$(CI)' == 'true'">
-		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<UseArtifactsOutput>true</UseArtifactsOutput>
-	</PropertyGroup>
+	<Import Project="$(MSBuildThisFileDirectory)connorjs-analyzers\build\connorjs-analyzers.props" />
 </Project>

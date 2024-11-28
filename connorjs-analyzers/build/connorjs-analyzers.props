@@ -4,7 +4,13 @@
 		<AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
 	</ItemGroup>
 
+	<PropertyGroup Condition="'$(CI)' == 'true'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+
 	<PropertyGroup>
+		<UseArtifactsOutput>true</UseArtifactsOutput>
+
 		<!-- MSBuild properties (for .NET) -->
 		<!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props -->
 
@@ -47,7 +53,7 @@
 	</PropertyGroup>
 
 	<!-- Overrides for test projects -->
-	<PropertyGroup Condition="$(IsTestProject)">
+	<PropertyGroup Condition="$(IsTestProject) == 'true'">
 		<!-- Test projects do not generate documentation -->
 		<GenerateDocumentationFile>false</GenerateDocumentationFile>
 

@@ -12,7 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{E393E29D-8
 		.gitignore = .gitignore
 		.github\workflows\pipeline.yaml = .github\workflows\pipeline.yaml
 		ci-build.ps1 = ci-build.ps1
-		Directory.Build.props = Directory.Build.props
 		GitVersion.yml = GitVersion.yml
 		global.json = global.json
 		LICENSE = LICENSE
